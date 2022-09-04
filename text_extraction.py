@@ -51,12 +51,13 @@ def clean_text(text):
         sent_text = nltk.sent_tokenize(text_string)  # this gives us a list of sentences
         # now loop over each sentence and tokenize it separately
         tokenized_sent_text = []
-        '''
+        #'''
         for sentence in sent_text:
             tokenized_text = nltk.word_tokenize(sentence)
             tagged = nltk.pos_tag(tokenized_text)
             tokenized_sent_text.append(tokenized_text)
-        '''
+        #'''
+        #chapters[chapter] = tokenized_sent_text
         chapters[chapter] = sent_text
     return chapters
 
