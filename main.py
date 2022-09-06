@@ -18,8 +18,8 @@ sample = os.path.join(ebook_path, books[0])
 
 paused = False  # global to track if the audio is paused
 objpath = os.path.join(".", "out")
-shutil.rmtree(objpath)
-os.makedirs(objpath)
+# shutil.rmtree(objpath)
+# os.makedirs(objpath)
 
 book_loaded = None
 
@@ -137,5 +137,34 @@ def read():
 
 if __name__ == '__main__':
 	# name of folder where the html, css, js, image files are located
-	eel.init('templates')
-	eel.start('index.html', mode='chrome', host='localhost', port=8000)
+	# eel.init('templates')
+	# eel.start('index.html', mode='chrome', host='localhost', port=8000)
+	import audio_metadata
+
+	metadata = audio_metadata.load('out/chapter.wav')
+	print(metadata)
+	text = " Oh my god, this is amazing"
+	obj = gTTS(text=text, lang='en')
+
+	from io import BytesIO
+
+	mp3_fp = BytesIO()
+	tts = gTTS(text, 'en')
+	tts.write_to_fp(mp3_fp)
+	import musicplayer
+
+
+	class Song:
+		def __init__(self, f): self.f = f
+
+		def readPacket(self, size):
+			return self.f.read(size)
+
+		def seekRaw(self, offset, whence):
+			self.f.seek(offset, whence)
+			return self.f.tell()
+
+
+	player = musicplayer.createPlayer()
+	player.queue = [Song(mp3_fp)]
+	player.playing = True
