@@ -25,7 +25,7 @@ ffmpeg_path = './ffmpeg/bin/ffmpeg.exe' if windows else "ffmpeg"
 book_loaded = None
 
 
-async def load_next(text, language, slow, path):
+def load_next(text, language, slow, path):
 	next_obj = gTTS(text=text, lang=language, slow=slow)
 	next_obj.save(path + '.mp3')
 	subprocess.call([ffmpeg_path, '-y', '-i', path + '.mp3', path + '.wav'])
@@ -63,11 +63,17 @@ def play(p, wf):
 	# start the stream
 	stream.start_stream()
 
+	"""
 	while stream.is_active() or paused:
 		with keyboard.Listener(on_press=on_press) as listener:
 			listener.join()
 
 		time.sleep(0.1)
+	"""
+
+	while stream.is_active():
+		time.sleep(0.1)
+
 
 	# stop stream
 	stream.stop_stream()
@@ -75,7 +81,7 @@ def play(p, wf):
 	wf.close()
 
 
-async def play_sentences(book, language="en", slow=False):
+def play_sentences(book, language="en", slow=False):
 	# instantiate PyAudio
 	p = pyaudio.PyAudio()
 
@@ -101,10 +107,6 @@ async def play_sentences(book, language="en", slow=False):
 			else:
 				os.rename(next_file_path + ".wav", current_file_path + ".wav")
 
-			if index + 1 < len(sentences):
-				asyncio.create_task(
-					load_next(sentences[index + 1], language=language, slow=slow, path=next_file_path))
-
 			# you audio here
 			wf = wave.open(current_file_path + ".wav", 'rb')
 
@@ -129,7 +131,7 @@ def load(book):
 @eel.expose
 def read():
 	if book_loaded is not None:
-		asyncio.run(play_sentences(book_loaded))
+		play_sentences(book_loaded)
 	return
 
 

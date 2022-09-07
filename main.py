@@ -19,16 +19,14 @@ sample = os.path.join(ebook_path, books[0])
 playing = False
 paused = False  # global to track if the audio is paused
 objpath = os.path.join(".", "out")
-shutil.rmtree(objpath)
+
+if os.path.exists(objpath):
+	shutil.rmtree(objpath)
+
 os.makedirs(objpath)
+
 ffmpeg_path = './ffmpeg/bin/ffmpeg.exe' if windows else "ffmpeg"
 book_loaded = None
-
-
-async def load_next(text, language, slow, path):
-	next_obj = gTTS(text=text, lang=language, slow=slow)
-	next_obj.save(path + '.mp3')
-	subprocess.call([ffmpeg_path, '-y', '-i', path + '.mp3', path + '.wav'])
 
 
 async def speak(txt, lang='en', slow=False):
