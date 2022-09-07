@@ -2,7 +2,7 @@ import ebooklib
 from ebooklib import epub
 import nltk
 from bs4 import BeautifulSoup
-
+#nltk.download('punkt')
 
 def extract_text(book_path):
 	book = epub.read_epub(book_path)
